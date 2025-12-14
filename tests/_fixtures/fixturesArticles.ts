@@ -1,0 +1,51 @@
+import { test as base } from '@playwright/test';
+import { CreateArticlePage } from '../../src/ui/pages/article/CreateArticlePage';
+import { ViewArticlePage } from '../../src/ui/pages/article/ViewArticlePage';
+import { EditArticlePage } from '../../src/ui/pages/article/EditArticlePage';
+import { generateNewArticleData } from '../../src/common/testData/generateNewArticleData';
+
+export type ArticleData = {
+  title: string;
+  description: string;
+  text: string;
+  tags?: string[];
+};
+
+export const test = base.extend<{
+  createArticlePage: CreateArticlePage;
+  viewArticlePage: ViewArticlePage;
+  editArticlePage: EditArticlePage;
+  articleWithoutTags: ArticleData;
+  articleWithOneTag: ArticleData;
+  articleWithTwoTags: ArticleData;
+}>({
+  createArticlePage: async ({ page }, use) => {
+    await use(new CreateArticlePage(page));
+  },
+
+  viewArticlePage: async ({ page }, use) => {
+    await use(new ViewArticlePage(page));
+  },
+
+  editArticlePage: async ({ page }, use) => {
+    await use(new EditArticlePage(page));
+  },
+
+  articleWithoutTags: async ({}, use) => {
+    const article = generateNewArticleData();
+    article.tags = [];
+    await use(article);
+  },
+
+  articleWithOneTag: async ({}, use) => {
+    const article = generateNewArticleData();
+    article.tags = ['tag1'];
+    await use(article);
+  },
+
+  articleWithTwoTags: async ({}, use) => {
+    const article = generateNewArticleData();
+    article.tags = ['tag1', 'tag2'];
+    await use(article);
+  },
+});
