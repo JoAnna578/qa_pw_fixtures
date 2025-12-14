@@ -3,6 +3,7 @@ import { CreateArticlePage } from '../../src/ui/pages/article/CreateArticlePage'
 import { ViewArticlePage } from '../../src/ui/pages/article/ViewArticlePage';
 import { EditArticlePage } from '../../src/ui/pages/article/EditArticlePage';
 import { generateNewArticleData } from '../../src/common/testData/generateNewArticleData';
+import { Logger } from './logger'; // upewnij się, że masz fixture logger
 
 export type ArticleData = {
   title: string;
@@ -18,6 +19,7 @@ export const test = base.extend<{
   articleWithoutTags: ArticleData;
   articleWithOneTag: ArticleData;
   articleWithTwoTags: ArticleData;
+  logger: Logger;
 }>({
   createArticlePage: async ({ page }, use) => {
     await use(new CreateArticlePage(page));
@@ -31,21 +33,18 @@ export const test = base.extend<{
     await use(new EditArticlePage(page));
   },
 
-  articleWithoutTags: async ({}, use) => {
-    const article = generateNewArticleData();
-    article.tags = [];
+  articleWithoutTags: async ({ logger }, use) => {
+    const article = generateNewArticleData(logger, { tags: [] });
     await use(article);
   },
 
-  articleWithOneTag: async ({}, use) => {
-    const article = generateNewArticleData();
-    article.tags = ['tag1'];
+  articleWithOneTag: async ({ logger }, use) => {
+    const article = generateNewArticleData(logger, { tags: ['tag1'] });
     await use(article);
   },
 
-  articleWithTwoTags: async ({}, use) => {
-    const article = generateNewArticleData();
-    article.tags = ['tag1', 'tag2'];
+  articleWithTwoTags: async ({ logger }, use) => {
+    const article = generateNewArticleData(logger, { tags: ['tag1', 'tag2'] });
     await use(article);
   },
 });

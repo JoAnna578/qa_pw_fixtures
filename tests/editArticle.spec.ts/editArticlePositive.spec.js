@@ -1,7 +1,5 @@
 import { test } from '../_fixtures/fixturesArticles';
-import createNewArticle, {
-  ArticleData,
-} from '../../src/ui/actions/article/createNewArticle';
+import createNewArticle from '../../src/ui/actions/article/createNewArticle';
 
 test.describe('Edit Article Positive Tests', () => {
   test('Edit title', async ({
@@ -39,7 +37,7 @@ test.describe('Edit Article Positive Tests', () => {
     const newDescription = articleWithTwoTags.description + ' Updated';
     await editArticlePage.fillDescriptionField(newDescription);
     await editArticlePage.clickUpdateArticleButton();
-    // Dodaj asercję widoczności opisu jeśli jest metoda
+    await viewArticlePage.assertArticleDescriptionIsVisible(newDescription); // nowa asercja
   });
 
   test('Edit text', async ({
@@ -96,8 +94,12 @@ test.describe('Edit Article Positive Tests', () => {
     const newTag = 'temporary';
     await editArticlePage.addTag(newTag);
     await editArticlePage.clickUpdateArticleButton();
+
+    // wracamy do edycji, bo po update strona przechodzi do widoku artykułu
+    await viewArticlePage.clickEditArticleButton();
     await editArticlePage.removeTag(newTag);
     await editArticlePage.clickUpdateArticleButton();
+
     await viewArticlePage.assertTagNotVisible(newTag);
   });
 });

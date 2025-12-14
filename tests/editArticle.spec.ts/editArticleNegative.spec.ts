@@ -1,5 +1,9 @@
 import { test } from '../_fixtures/fixturesArticles';
-import { TITLE_CANNOT_BE_EMPTY } from '../../src/ui/constants/articleErrorMessages';
+import {
+  TITLE_CANNOT_BE_EMPTY,
+  DESCRIPTION_CANNOT_BE_EMPTY,
+  TEXT_CANNOT_BE_EMPTY,
+} from '../../src/ui/constants/articleErrorMessages';
 import createNewArticle, {
   ArticleData,
 } from '../../src/ui/actions/article/createNewArticle';
@@ -11,7 +15,6 @@ test.describe('Edit Article Negative Tests', () => {
     editArticlePage,
     articleWithTwoTags,
   }) => {
-    // Tworzymy artykuł
     await createNewArticle(
       createArticlePage,
       viewArticlePage,
@@ -19,7 +22,6 @@ test.describe('Edit Article Negative Tests', () => {
     );
     await viewArticlePage.clickEditArticleButton();
 
-    // Testujemy usunięcie tytułu
     await editArticlePage.fillTitleField('');
     await editArticlePage.clickUpdateArticleButton();
     await editArticlePage.assertErrorMessageContainsText(TITLE_CANNOT_BE_EMPTY);
@@ -40,7 +42,9 @@ test.describe('Edit Article Negative Tests', () => {
 
     await editArticlePage.fillDescriptionField('');
     await editArticlePage.clickUpdateArticleButton();
-    // Dodaj asercję jeśli jest komunikat błędu dla opisu
+    await editArticlePage.assertErrorMessageContainsText(
+      DESCRIPTION_CANNOT_BE_EMPTY,
+    );
   });
 
   test('Remove text', async ({
@@ -58,6 +62,6 @@ test.describe('Edit Article Negative Tests', () => {
 
     await editArticlePage.fillTextField('');
     await editArticlePage.clickUpdateArticleButton();
-    // Dodaj asercję jeśli jest komunikat błędu dla treści artykułu
+    await editArticlePage.assertErrorMessageContainsText(TEXT_CANNOT_BE_EMPTY);
   });
 });
